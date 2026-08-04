@@ -1,0 +1,14 @@
+export const GAME_CONSTANTS = {
+  PADDLE_WIDTH: 150,
+  PADDLE_HEIGHT: 12,
+  PADDLE_SPEED: 600, // pixels per second
+  PADDLE_COLOR: "#1d1d1d",
+  BALL_RADIUS: 6,
+  BALL_SPEED: 500, // pixels per second
+  BALL_COLOR: "#1d1d1d",
+  BRICK_SIZE: 14,
+  BRICK_GAP: 2,
+  BRICK_COLOR: "#1d1d1d",
+  MODIFIER_SIZE: 20,
+  MODIFIER_SPEED: 200,
+};

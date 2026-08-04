@@ -1,69 +1,42 @@
-import Image from "next/image";
+import GameCanvas from "@/components/GameCanvas";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="relative w-full h-full flex flex-col justify-between p-8 pointer-events-none select-none">
+      <header className="flex justify-between items-center z-10 w-full pointer-events-auto">
+        <h1 className="text-xl font-bold tracking-tighter uppercase">Aence</h1>
+        <nav className="flex gap-6 text-sm font-medium tracking-wide">
+          <a href="#" className="hover:opacity-70 transition-opacity">WORK</a>
+          <a href="#" className="hover:opacity-70 transition-opacity">STUDIO</a>
+          <a href="#" className="hover:opacity-70 transition-opacity">COMPONENTS</a>
+          <a href="#" className="hover:opacity-70 transition-opacity">CONTACT</a>
+        </nav>
+      </header>
+
+      {/* The Game Layer */}
+      <div className="absolute inset-0 z-0 pointer-events-auto">
+        <GameCanvas />
+      </div>
+
+      {/* Center Subtitle (positioned below the 404 bricks) */}
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-[180px] z-10 pointer-events-auto flex items-center justify-center">
+        <span className="text-xs font-bold tracking-widest uppercase text-[#1d1d1d]">
+          ( MIGHT AS WELL PLAY )
+        </span>
+      </div>
+
+      <footer className="flex justify-between items-end z-10 w-full pointer-events-auto mt-auto">
+        <button className="w-10 h-10 rounded-full bg-[#333333] text-[#e6e4dc] flex items-center justify-center hover:scale-105 transition-transform" aria-label="N Icon">
+          <span className="text-sm font-medium">N</span>
+        </button>
+        <button className="w-10 h-10 rounded-full bg-[#333333] text-[#e6e4dc] flex items-center justify-center hover:scale-105 transition-transform" aria-label="Toggle Sound">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" stroke="none">
+            <path d="M11 5L6 9H2v6h4l5 4V5z"></path>
+            <path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+            <path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path>
+          </svg>
+        </button>
+      </footer>
+    </main>
   );
 }
