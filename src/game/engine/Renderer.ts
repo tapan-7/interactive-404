@@ -48,22 +48,11 @@ export class Renderer {
   }
 
   drawModifiers(modifiers: Modifier[]) {
-    // Basic rectangle rendering, could be improved with icons or colors
+    // Basic rectangle rendering
     for (const mod of modifiers) {
       if (mod.active) {
         this.ctx.fillStyle = this.getModifierColor(mod.type);
         this.ctx.fillRect(mod.x, mod.y, mod.size, mod.size);
-        
-        // Draw a letter or symbol in the center
-        this.ctx.fillStyle = "#e6e4dc";
-        this.ctx.font = "10px sans-serif";
-        this.ctx.textAlign = "center";
-        this.ctx.textBaseline = "middle";
-        this.ctx.fillText(
-          this.getModifierSymbol(mod.type), 
-          mod.x + mod.size / 2, 
-          mod.y + mod.size / 2
-        );
       }
     }
   }

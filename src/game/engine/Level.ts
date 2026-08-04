@@ -59,7 +59,7 @@ export class Level {
     const patternWidth = cols * brickSize + (cols - 1) * gap;
     
     const startX = (screenWidth - patternWidth) / 2;
-    const startY = screenHeight * 0.15;
+    const startY = screenHeight * 0.08;
     
     let brickIndex = 0;
 

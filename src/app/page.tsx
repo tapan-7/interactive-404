@@ -18,13 +18,6 @@ export default function Home() {
         <GameCanvas />
       </div>
 
-      {/* Center Subtitle (positioned below the 404 bricks) */}
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 translate-y-[180px] z-10 pointer-events-auto flex items-center justify-center">
-        <span className="text-xs font-bold tracking-widest uppercase text-[#1d1d1d]">
-          ( MIGHT AS WELL PLAY )
-        </span>
-      </div>
-
       <footer className="flex justify-between items-end z-10 w-full pointer-events-auto mt-auto">
         <button className="w-10 h-10 rounded-full bg-[#333333] text-[#e6e4dc] flex items-center justify-center hover:scale-105 transition-transform" aria-label="N Icon">
           <span className="text-sm font-medium">N</span>

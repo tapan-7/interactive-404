@@ -10,7 +10,7 @@ import { Modifier } from "../entities/Modifier";
 import { GAME_CONSTANTS } from "../constants/Constants";
 import { ModifierEffects } from "../effects/ModifierEffects";
 
-type GameState = "IDLE" | "PLAYING" | "GAMEOVER";
+export type GameState = "IDLE" | "PLAYING" | "PAUSED" | "GAMEOVER";
 
 export class Engine {
   private canvas: HTMLCanvasElement;
@@ -80,7 +80,7 @@ export class Engine {
     this.balls = [
       new Ball(
         this.width / 2,
-        this.height - 60,
+        this.height - 40 - GAME_CONSTANTS.BALL_RADIUS, // Just above paddle
         GAME_CONSTANTS.BALL_RADIUS,
         GAME_CONSTANTS.BALL_SPEED,
         Math.cos(angle),
@@ -100,14 +100,8 @@ export class Engine {
 
   start() {
     if (this.state === "IDLE") {
-      // Wait for user to interact or we just start automatically after a delay
-      setTimeout(() => {
-        if (this.state === "IDLE") {
-          this.setState("PLAYING");
-          this.lastTime = performance.now();
-          this.reqId = requestAnimationFrame(this.loop);
-        }
-      }, 1500); // 1.5 seconds delay before ball starts moving
+      this.lastTime = performance.now();
+      this.reqId = requestAnimationFrame(this.loop);
     }
   }
 
@@ -117,24 +111,52 @@ export class Engine {
   }
 
   private loop(timestamp: number) {
-    if (this.state !== "PLAYING") {
-      // Handle Game Over input
-      if (this.state === "GAMEOVER" && this.input.spacePressed) {
-        this.initLevel();
-        this.setState("PLAYING");
-        this.lastTime = timestamp;
-      }
-      this.reqId = requestAnimationFrame(this.loop);
-      return;
-    }
-
     const dt = (timestamp - this.lastTime) / 1000;
     this.lastTime = timestamp;
 
-    this.update(dt);
-    this.render();
+    if (this.state === "IDLE") {
+      this.updateIdle(dt);
+      if (this.input.spacePressed) {
+        this.setState("PLAYING");
+      }
+    } else if (this.state === "GAMEOVER") {
+      this.updateIdle(dt);
+      if (this.input.spacePressed || this.input.enterPressed) {
+        this.setState("PLAYING");
+      }
+    } else if (this.state === "PAUSED") {
+      if (this.input.spacePressed || this.input.escapePressed) {
+        this.setState("PLAYING");
+      }
+    } else if (this.state === "PLAYING") {
+      if (this.input.escapePressed || this.input.spacePressed) {
+        this.setState("PAUSED");
+      } else {
+        this.update(dt);
+      }
+    }
 
+    this.render();
+    this.input.consumeEdgeTriggers();
     this.reqId = requestAnimationFrame(this.loop);
+  }
+
+  private updateIdle(dt: number) {
+    if (this.input.leftPressed) {
+      this.paddle.dx = -1;
+    } else if (this.input.rightPressed) {
+      this.paddle.dx = 1;
+    } else {
+      this.paddle.dx = 0;
+    }
+    
+    this.physics.updatePaddle(this.paddle, dt, this.width);
+    
+    // Keep ball locked to the center of the paddle
+    if (this.balls.length > 0) {
+      this.balls[0].x = this.paddle.x + this.paddle.width / 2;
+      this.balls[0].y = this.paddle.y - this.balls[0].radius;
+    }
   }
 
   private update(dt: number) {
@@ -201,12 +223,9 @@ export class Engine {
     }
 
     // 4. Check Win/Loss conditions
-    if (activeBalls === 0) {
-      this.setState("GAMEOVER");
-    }
-
     const activeBricks = this.bricks.filter(b => b.active).length;
-    if (activeBricks === 0) {
+    if (activeBalls === 0 || activeBricks === 0) {
+      this.initLevel();
       this.setState("GAMEOVER");
     }
   }

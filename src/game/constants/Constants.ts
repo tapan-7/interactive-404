@@ -4,7 +4,7 @@ export const GAME_CONSTANTS = {
   PADDLE_SPEED: 600, // pixels per second
   PADDLE_COLOR: "#1d1d1d",
   BALL_RADIUS: 6,
-  BALL_SPEED: 500, // pixels per second
+  BALL_SPEED: 350, // pixels per second
   BALL_COLOR: "#1d1d1d",
   BRICK_SIZE: 14,
   BRICK_GAP: 2,

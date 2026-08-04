@@ -1,17 +1,16 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Engine } from "../game/engine/Engine";
+import { Engine, GameState } from "../game/engine/Engine";
 
 export default function GameCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<Engine | null>(null);
-  const [gameState, setGameState] = useState<"IDLE" | "PLAYING" | "GAMEOVER">("IDLE");
+  const [gameState, setGameState] = useState<GameState>("IDLE");
 
   useEffect(() => {
     if (!canvasRef.current) return;
 
-    // Initialize Engine once
     engineRef.current = new Engine(canvasRef.current, (state) => {
       setGameState(state);
     });
@@ -27,7 +26,6 @@ export default function GameCanvas() {
     window.addEventListener("resize", handleResize);
     handleResize();
 
-    // The Engine handles its own requestAnimationFrame, we just start it
     engineRef.current.start();
 
     return () => {
@@ -42,12 +40,28 @@ export default function GameCanvas() {
     <div className="w-full h-full relative">
       <canvas ref={canvasRef} className="block w-full h-full" />
       
+      {/* Subtle UI text based on state */}
+      {gameState === "IDLE" && (
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10 pointer-events-auto flex items-center justify-center transition-opacity duration-500">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#1d1d1d]">
+            ( PRESS SPACE TO START )
+          </span>
+        </div>
+      )}
+
+      {gameState === "PAUSED" && (
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10 pointer-events-auto flex items-center justify-center transition-opacity duration-500">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#1d1d1d]">
+            ( PAUSED - PRESS SPACE TO RESUME )
+          </span>
+        </div>
+      )}
+
       {gameState === "GAMEOVER" && (
-        <div className="absolute inset-0 flex items-center justify-center bg-[#e6e4dc]/80 backdrop-blur-sm z-50">
-          <div className="text-center text-[#1d1d1d]">
-            <h2 className="text-2xl font-bold mb-4 uppercase tracking-widest">Game Over</h2>
-            <p className="font-medium tracking-wide">Press SPACE or ENTER to restart</p>
-          </div>
+        <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10 pointer-events-auto flex items-center justify-center transition-opacity duration-500">
+          <span className="text-xs font-bold tracking-widest uppercase text-[#1d1d1d]">
+            ( GAME OVER - PRESS SPACE TO START )
+          </span>
         </div>
       )}
     </div>

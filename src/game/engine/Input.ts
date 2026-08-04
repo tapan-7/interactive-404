@@ -1,9 +1,11 @@
-import { GAME_CONSTANTS } from "../constants/Constants";
-
 export class Input {
   leftPressed: boolean = false;
   rightPressed: boolean = false;
+  
+  // Edge triggers
   spacePressed: boolean = false;
+  enterPressed: boolean = false;
+  escapePressed: boolean = false;
 
   constructor() {
     this.handleKeyDown = this.handleKeyDown.bind(this);
@@ -26,16 +28,24 @@ export class Input {
     window.removeEventListener("touchend", this.handleTouchEnd);
   }
 
+  // Clear edge triggers after they are read
+  consumeEdgeTriggers() {
+    this.spacePressed = false;
+    this.enterPressed = false;
+    this.escapePressed = false;
+  }
+
   private handleKeyDown(e: KeyboardEvent) {
     if (e.code === "ArrowLeft" || e.code === "KeyA") this.leftPressed = true;
     if (e.code === "ArrowRight" || e.code === "KeyD") this.rightPressed = true;
-    if (e.code === "Space" || e.code === "Enter") this.spacePressed = true;
+    if (e.code === "Space") this.spacePressed = true;
+    if (e.code === "Enter") this.enterPressed = true;
+    if (e.code === "Escape") this.escapePressed = true;
   }
 
   private handleKeyUp(e: KeyboardEvent) {
     if (e.code === "ArrowLeft" || e.code === "KeyA") this.leftPressed = false;
     if (e.code === "ArrowRight" || e.code === "KeyD") this.rightPressed = false;
-    if (e.code === "Space" || e.code === "Enter") this.spacePressed = false;
   }
 
   private handleTouchStart(e: TouchEvent) {
