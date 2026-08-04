@@ -2,16 +2,16 @@ import { Ball } from "../entities/Ball";
 import { Paddle } from "../entities/Paddle";
 import { ModifierType } from "../entities/Modifier";
 import { GAME_CONSTANTS } from "../constants/Constants";
-import { Engine } from "../engine/Engine";
+import type { Engine } from "../engine/Engine";
 
 export class ModifierEffects {
   static apply(type: ModifierType, paddle: Paddle, balls: Ball[], engine: Engine) {
     switch (type) {
       case "GROW_PADDLE":
-        paddle.width = Math.min(paddle.width + 50, window.innerWidth / 2);
+        paddle.width = Math.min(paddle.width + 50, GAME_CONSTANTS.PADDLE_WIDTH * 3);
         break;
       case "SHRINK_PADDLE":
-        paddle.width = Math.max(paddle.width - 20, 50);
+        paddle.width = Math.max(paddle.width - 20, GAME_CONSTANTS.PADDLE_WIDTH);
         break;
       case "SPEED_BALL":
         balls.forEach((ball) => {
