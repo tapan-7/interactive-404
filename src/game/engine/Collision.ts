@@ -2,6 +2,7 @@ import { Ball } from "../entities/Ball";
 import { Paddle } from "../entities/Paddle";
 import { Brick } from "../entities/Brick";
 import { Modifier } from "../entities/Modifier";
+import { Projectile } from "../entities/Projectile";
 
 export class Collision {
   resolveBallBounds(ball: Ball, width: number, height: number): boolean {
@@ -75,12 +76,15 @@ export class Collision {
         // Collision occurred!
         
         // Check which side we hit to reflect properly
-        if (Math.abs(distX) > Math.abs(distY)) {
-          // Hit left or right
-          ball.dx = -ball.dx;
-        } else {
-          // Hit top or bottom
-          ball.dy = -ball.dy;
+        // If piercing, we do NOT reflect.
+        if (ball.pierceTimer <= 0) {
+          if (Math.abs(distX) > Math.abs(distY)) {
+            // Hit left or right
+            ball.dx = -ball.dx;
+          } else {
+            // Hit top or bottom
+            ball.dy = -ball.dy;
+          }
         }
         
         return brick;
@@ -99,5 +103,28 @@ export class Collision {
       return true;
     }
     return false;
+  }
+
+  resolveProjectileBricks(projectiles: Projectile[], bricks: Brick[]): Brick[] {
+    const hitBricks: Brick[] = [];
+    for (const proj of projectiles) {
+      if (!proj.active) continue;
+
+      for (const brick of bricks) {
+        if (!brick.active) continue;
+
+        if (
+          proj.x + proj.width > brick.x &&
+          proj.x < brick.x + brick.width &&
+          proj.y + proj.height > brick.y &&
+          proj.y < brick.y + brick.height
+        ) {
+          proj.active = false;
+          hitBricks.push(brick);
+          break; // Projectile can only hit one brick
+        }
+      }
+    }
+    return hitBricks;
   }
 }

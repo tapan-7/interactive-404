@@ -2,6 +2,7 @@ import { Ball } from "../entities/Ball";
 import { Paddle } from "../entities/Paddle";
 import { Brick } from "../entities/Brick";
 import { Modifier } from "../entities/Modifier";
+import { Projectile } from "../entities/Projectile";
 import { GAME_CONSTANTS } from "../constants/Constants";
 
 export class Renderer {
@@ -36,46 +37,44 @@ export class Renderer {
   }
 
   drawBalls(balls: Ball[]) {
-    this.ctx.fillStyle = GAME_CONSTANTS.BALL_COLOR;
     for (const ball of balls) {
       if (ball.active) {
+        this.ctx.fillStyle = GAME_CONSTANTS.BALL_COLOR;
         this.ctx.beginPath();
         this.ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         this.ctx.fill();
         this.ctx.closePath();
+
+        // Visual indicator for piercing ball (white center)
+        if (ball.pierceTimer > 0) {
+          this.ctx.fillStyle = "#ffffff";
+          this.ctx.beginPath();
+          this.ctx.arc(ball.x, ball.y, ball.radius * 0.4, 0, Math.PI * 2);
+          this.ctx.fill();
+          this.ctx.closePath();
+        }
       }
     }
   }
 
   drawModifiers(modifiers: Modifier[]) {
-    // Basic rectangle rendering
     for (const mod of modifiers) {
       if (mod.active) {
-        this.ctx.fillStyle = this.getModifierColor(mod.type);
-        this.ctx.fillRect(mod.x, mod.y, mod.size, mod.size);
+        this.ctx.fillStyle = "#1d1d1d";
+        this.ctx.font = `${mod.size * 1.4}px serif`;
+        this.ctx.textAlign = "center";
+        this.ctx.textBaseline = "middle";
+        this.ctx.fillText("♣", mod.x + mod.size / 2, mod.y + mod.size / 2);
       }
     }
   }
 
-  private getModifierColor(type: string): string {
-    switch (type) {
-      case "GROW_PADDLE": return "#10b981"; // green
-      case "SHRINK_PADDLE": return "#ef4444"; // red
-      case "SPEED_BALL": return "#f59e0b"; // orange
-      case "SLOW_BALL": return "#3b82f6"; // blue
-      case "EXTRA_BALL": return "#8b5cf6"; // purple
-      default: return "#1d1d1d";
-    }
-  }
-
-  private getModifierSymbol(type: string): string {
-    switch (type) {
-      case "GROW_PADDLE": return "+";
-      case "SHRINK_PADDLE": return "-";
-      case "SPEED_BALL": return ">>";
-      case "SLOW_BALL": return "<<";
-      case "EXTRA_BALL": return "x2";
-      default: return "?";
+  drawProjectiles(projectiles: Projectile[]) {
+    this.ctx.fillStyle = "#1d1d1d"; // Match premium look
+    for (const proj of projectiles) {
+      if (proj.active) {
+        this.ctx.fillRect(proj.x, proj.y, proj.width, proj.height);
+      }
     }
   }
 }

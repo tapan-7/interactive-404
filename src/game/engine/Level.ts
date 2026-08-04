@@ -3,11 +3,25 @@ import { ModifierType } from "../entities/Modifier";
 import { GAME_CONSTANTS } from "../constants/Constants";
 
 const MODIFIER_POOL: ModifierType[] = [
-  "GROW_PADDLE",
-  "SHRINK_PADDLE",
-  "SPEED_BALL",
-  "SLOW_BALL",
+  "BLANK",
+  "BLANK",
+  "BLANK",
   "EXTRA_BALL",
+  "BLANK",
+  "SPEED_BALL",
+  "BLANK",
+  "GROW_PADDLE",
+  "BLANK",
+  "SLOW_BALL",
+  "BLANK",
+  "SHRINK_PADDLE",
+  "BLANK",
+  "EXTRA_BALL",
+  "BLANK",
+  "PIERCE_BALL",
+  "BLANK",
+  "BLANK",
+  "LASER_PADDLE",
 ];
 
 const PATTERN = [

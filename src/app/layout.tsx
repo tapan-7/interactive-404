@@ -16,7 +16,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={inter.className}>
-      <body className="w-screen h-screen overflow-hidden bg-[#e6e4dc] text-[#1d1d1d] selection:bg-black selection:text-white">
+      <body suppressHydrationWarning className="w-screen h-screen overflow-hidden bg-[#e6e4dc] text-[#1d1d1d] selection:bg-black selection:text-white">
         {children}
       </body>
     </html>

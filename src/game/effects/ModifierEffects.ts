@@ -23,21 +23,33 @@ export class ModifierEffects {
           ball.speed = Math.max(ball.speed * 0.8, 200);
         });
         break;
-      case "EXTRA_BALL":
-        if (balls.length > 0) {
-          const b = balls[0];
-          // Spawn new ball at the same position but opposite horizontal velocity
-          balls.push(
-            new Ball(
-              b.x,
-              b.y,
-              b.radius,
-              b.speed,
-              -b.dx,
-              b.dy
-            )
+      case "EXTRA_BALL": {
+        const currentBalls = [...balls];
+        for (const b of currentBalls) {
+          if (!b.active) continue;
+          const newBall = new Ball(
+            b.x,
+            b.y,
+            b.radius,
+            b.speed,
+            -b.dx,
+            b.dy
           );
+          newBall.pierceTimer = b.pierceTimer;
+          balls.push(newBall);
         }
+        break;
+      }
+      case "PIERCE_BALL":
+        balls.forEach((ball) => {
+          ball.pierceTimer = 5;
+        });
+        break;
+      case "LASER_PADDLE":
+        paddle.laserTimer = 5;
+        break;
+      case "BLANK":
+        // Joker - does nothing
         break;
     }
   }

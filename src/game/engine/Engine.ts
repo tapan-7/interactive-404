@@ -7,6 +7,7 @@ import { Ball } from "../entities/Ball";
 import { Paddle } from "../entities/Paddle";
 import { Brick } from "../entities/Brick";
 import { Modifier } from "../entities/Modifier";
+import { Projectile } from "../entities/Projectile";
 import { GAME_CONSTANTS } from "../constants/Constants";
 import { ModifierEffects } from "../effects/ModifierEffects";
 
@@ -27,6 +28,7 @@ export class Engine {
   private balls: Ball[] = [];
   private bricks: Brick[] = [];
   private modifiers: Modifier[] = [];
+  private projectiles: Projectile[] = [];
 
   private lastTime: number = 0;
   private reqId: number = 0;
@@ -90,6 +92,7 @@ export class Engine {
 
     this.bricks = Level.generateBricks(this.width, this.height);
     this.modifiers = [];
+    this.projectiles = [];
     
     // Just draw once
     this.renderer.clear(this.width, this.height);
@@ -179,6 +182,20 @@ export class Engine {
     }
     
     this.physics.updateModifiers(this.modifiers, dt);
+    this.physics.updateProjectiles(this.projectiles, dt);
+
+    // Laser logic
+    if (this.paddle.laserTimer > 0 && this.paddle.laserCooldown <= 0) {
+      this.paddle.laserCooldown = 0.5; // Fire every 0.5 seconds
+      
+      // Spawn two lasers, one from each edge of the paddle
+      this.projectiles.push(
+        new Projectile(this.paddle.x + 5, this.paddle.y, 2, 10, 600)
+      );
+      this.projectiles.push(
+        new Projectile(this.paddle.x + this.paddle.width - 7, this.paddle.y, 2, 10, 600)
+      );
+    }
 
     // 3. Resolve Collisions
     let activeBalls = 0;
@@ -222,6 +239,20 @@ export class Engine {
       }
     }
 
+    // Projectile collisions
+    const hitBricksByProjectiles = this.collision.resolveProjectileBricks(this.projectiles, this.bricks);
+    for (const brick of hitBricksByProjectiles) {
+      // Spawn modifier just like a normal ball hit
+      this.modifiers.push(
+        new Modifier(
+          brick.x + brick.width / 2 - GAME_CONSTANTS.MODIFIER_SIZE / 2,
+          brick.y + brick.height / 2 - GAME_CONSTANTS.MODIFIER_SIZE / 2,
+          brick.modifier,
+          GAME_CONSTANTS.MODIFIER_SIZE
+        )
+      );
+    }
+
     // 4. Check Win/Loss conditions
     const activeBricks = this.bricks.filter(b => b.active).length;
     if (activeBalls === 0 || activeBricks === 0) {
@@ -234,6 +265,7 @@ export class Engine {
     this.renderer.clear(this.width, this.height);
     this.renderer.drawBricks(this.bricks);
     this.renderer.drawModifiers(this.modifiers);
+    this.renderer.drawProjectiles(this.projectiles);
     this.renderer.drawPaddle(this.paddle);
     this.renderer.drawBalls(this.balls);
   }

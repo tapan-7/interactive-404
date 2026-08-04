@@ -1,4 +1,4 @@
-export type ModifierType = "GROW_PADDLE" | "SHRINK_PADDLE" | "SPEED_BALL" | "SLOW_BALL" | "EXTRA_BALL";
+export type ModifierType = "GROW_PADDLE" | "SHRINK_PADDLE" | "SPEED_BALL" | "SLOW_BALL" | "EXTRA_BALL" | "PIERCE_BALL" | "LASER_PADDLE" | "BLANK";
 
 export class Modifier {
   x: number;

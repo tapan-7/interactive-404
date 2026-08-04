@@ -6,6 +6,7 @@ export class Ball {
   dy: number;
   speed: number;
   active: boolean = true;
+  pierceTimer: number = 0;
 
   constructor(x: number, y: number, radius: number, speed: number, dx: number, dy: number) {
     this.x = x;

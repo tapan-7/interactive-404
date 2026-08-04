@@ -1,12 +1,10 @@
-export class Paddle {
+export class Projectile {
   x: number;
   y: number;
   width: number;
   height: number;
   speed: number;
-  dx: number = 0;
-  laserTimer: number = 0;
-  laserCooldown: number = 0;
+  active: boolean;
 
   constructor(x: number, y: number, width: number, height: number, speed: number) {
     this.x = x;
@@ -14,5 +12,6 @@ export class Paddle {
     this.width = width;
     this.height = height;
     this.speed = speed;
+    this.active = true;
   }
 }
