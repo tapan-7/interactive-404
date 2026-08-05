@@ -8,7 +8,11 @@ export class ModifierEffects {
   static apply(type: ModifierType, paddle: Paddle, balls: Ball[], engine: Engine) {
     switch (type) {
       case "GROW_PADDLE":
-        paddle.width = Math.min(paddle.width + 50, GAME_CONSTANTS.PADDLE_WIDTH * 3);
+        // On mobile, limit to half screen width, otherwise max 3x normal size
+        paddle.width = Math.min(
+          paddle.width + 50,
+          Math.min(GAME_CONSTANTS.PADDLE_WIDTH * 3, window.innerWidth / 2)
+        );
         break;
       case "SHRINK_PADDLE":
         paddle.width = Math.max(paddle.width - 20, GAME_CONSTANTS.PADDLE_WIDTH);
@@ -42,11 +46,11 @@ export class ModifierEffects {
       }
       case "PIERCE_BALL":
         balls.forEach((ball) => {
-          ball.pierceTimer = 5;
+          ball.pierceTimer = 2.5;
         });
         break;
       case "LASER_PADDLE":
-        paddle.laserTimer = 5;
+        paddle.laserTimer = 2.5;
         break;
       case "BLANK":
         // Joker - does nothing

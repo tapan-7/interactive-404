@@ -6,22 +6,32 @@ const MODIFIER_POOL: ModifierType[] = [
   "BLANK",
   "BLANK",
   "BLANK",
+  "BLANK",
+  "BLANK",
   "EXTRA_BALL",
+  "BLANK",
+  "BLANK",
   "BLANK",
   "SPEED_BALL",
   "BLANK",
+  "BLANK",
   "GROW_PADDLE",
+  "BLANK",
   "BLANK",
   "SLOW_BALL",
   "BLANK",
+  "BLANK",
   "SHRINK_PADDLE",
   "BLANK",
-  "EXTRA_BALL",
   "BLANK",
   "PIERCE_BALL",
   "BLANK",
   "BLANK",
+  "BLANK",
   "LASER_PADDLE",
+  "BLANK",
+  "BLANK",
+  "BLANK",
 ];
 
 const PATTERN = [
@@ -67,13 +77,24 @@ export class Level {
     const rows = PATTERN.length;
     const cols = PATTERN[0].length;
     
-    const brickSize = Math.min(Math.floor(screenWidth / cols * 0.7), 16);
     const gap = 1;
+    // We want the total pattern width to be at most 95% of screen width.
+    const maxAvailableWidth = screenWidth * 0.95 - (cols - 1) * gap;
+    const widthBasedSize = Math.floor(maxAvailableWidth / cols);
+    
+    // We want the total pattern height to be at most 55% of screen height so it doesn't cover the paddle
+    const maxAvailableHeight = screenHeight * 0.55 - (rows - 1) * gap;
+    const heightBasedSize = Math.floor(maxAvailableHeight / rows);
+    
+    // Choose the smaller of the two, with a minimum size of 4px
+    const brickSize = Math.max(Math.min(widthBasedSize, heightBasedSize), 4);
     
     const patternWidth = cols * brickSize + (cols - 1) * gap;
+    const patternHeight = rows * brickSize + (rows - 1) * gap;
     
     const startX = (screenWidth - patternWidth) / 2;
-    const startY = screenHeight * 0.08;
+    // Center it somewhat vertically in the top 55% of the screen, or at least 8% from top
+    const startY = Math.max(screenHeight * 0.08, (screenHeight * 0.55 - patternHeight) / 2);
     
     let brickIndex = 0;
 

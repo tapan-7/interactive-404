@@ -11,6 +11,7 @@ export class Input {
     this.handleKeyDown = this.handleKeyDown.bind(this);
     this.handleKeyUp = this.handleKeyUp.bind(this);
     this.handleTouchStart = this.handleTouchStart.bind(this);
+    this.handleTouchMove = this.handleTouchMove.bind(this);
     this.handleTouchEnd = this.handleTouchEnd.bind(this);
   }
 
@@ -18,6 +19,7 @@ export class Input {
     window.addEventListener("keydown", this.handleKeyDown);
     window.addEventListener("keyup", this.handleKeyUp);
     window.addEventListener("touchstart", this.handleTouchStart);
+    window.addEventListener("touchmove", this.handleTouchMove);
     window.addEventListener("touchend", this.handleTouchEnd);
   }
 
@@ -25,6 +27,7 @@ export class Input {
     window.removeEventListener("keydown", this.handleKeyDown);
     window.removeEventListener("keyup", this.handleKeyUp);
     window.removeEventListener("touchstart", this.handleTouchStart);
+    window.removeEventListener("touchmove", this.handleTouchMove);
     window.removeEventListener("touchend", this.handleTouchEnd);
   }
 
@@ -50,10 +53,27 @@ export class Input {
 
   private handleTouchStart(e: TouchEvent) {
     const touch = e.touches[0];
+    
+    // Any tap on mobile also acts as 'Space' to start/pause
+    this.spacePressed = true;
+    
     if (touch.clientX < window.innerWidth / 2) {
       this.leftPressed = true;
     } else {
       this.rightPressed = true;
+    }
+  }
+
+  private handleTouchMove(e: TouchEvent) {
+    // Optional: could track exact finger position, 
+    // but for now we just maintain the left/right pressure
+    const touch = e.touches[0];
+    if (touch.clientX < window.innerWidth / 2) {
+      this.leftPressed = true;
+      this.rightPressed = false;
+    } else {
+      this.rightPressed = true;
+      this.leftPressed = false;
     }
   }
 
