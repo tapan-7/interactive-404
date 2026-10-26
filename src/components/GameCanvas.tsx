@@ -17,9 +17,21 @@ export default function GameCanvas() {
 
     const handleResize = () => {
       if (canvasRef.current && engineRef.current) {
-        canvasRef.current.width = window.innerWidth;
-        canvasRef.current.height = window.innerHeight;
-        engineRef.current.handleResize(window.innerWidth, window.innerHeight);
+        const dpr = window.devicePixelRatio || 1;
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+
+        canvasRef.current.width = width * dpr;
+        canvasRef.current.height = height * dpr;
+        canvasRef.current.style.width = `${width}px`;
+        canvasRef.current.style.height = `${height}px`;
+
+        const ctx = canvasRef.current.getContext("2d");
+        if (ctx) {
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+
+        engineRef.current.handleResize(width, height);
       }
     };
 
@@ -37,9 +49,9 @@ export default function GameCanvas() {
   }, []);
 
   return (
-    <div className="w-full h-full relative">
+    <div className="w-full h-full relative select-none">
       <canvas ref={canvasRef} className="block w-full h-full" />
-      
+
       {/* Subtle UI text based on state */}
       {gameState === "IDLE" && (
         <div className="absolute bottom-24 left-1/2 transform -translate-x-1/2 z-10 pointer-events-auto flex items-center justify-center transition-opacity duration-500">

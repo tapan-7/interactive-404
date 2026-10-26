@@ -8,19 +8,19 @@ export class Physics {
   updateBall(ball: Ball, dt: number) {
     ball.x += ball.dx * ball.speed * dt;
     ball.y += ball.dy * ball.speed * dt;
-    
+
     if (ball.pierceTimer > 0) {
       ball.pierceTimer -= dt;
     }
   }
 
-  updatePaddle(paddle: Paddle, dt: number, width: number) {
+  updatePaddlePosition(paddle: Paddle, dt: number, width: number) {
     paddle.x += paddle.dx * paddle.speed * dt;
-    
-    // Clamp to screen bounds
     if (paddle.x < 0) paddle.x = 0;
     if (paddle.x + paddle.width > width) paddle.x = width - paddle.width;
+  }
 
+  updatePaddleTimers(paddle: Paddle, dt: number) {
     if (paddle.laserTimer > 0) {
       paddle.laserTimer -= dt;
       if (paddle.laserCooldown > 0) {

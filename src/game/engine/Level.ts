@@ -1,36 +1,24 @@
 import { Brick } from "../entities/Brick";
 import { ModifierType } from "../entities/Modifier";
-import { GAME_CONSTANTS } from "../constants/Constants";
 
 const MODIFIER_POOL: ModifierType[] = [
-  "BLANK",
-  "BLANK",
   "BLANK",
   "BLANK",
   "BLANK",
   "EXTRA_BALL",
   "BLANK",
   "BLANK",
-  "BLANK",
   "SPEED_BALL",
-  "BLANK",
   "BLANK",
   "GROW_PADDLE",
   "BLANK",
-  "BLANK",
   "SLOW_BALL",
-  "BLANK",
   "BLANK",
   "SHRINK_PADDLE",
   "BLANK",
-  "BLANK",
   "PIERCE_BALL",
   "BLANK",
-  "BLANK",
-  "BLANK",
   "LASER_PADDLE",
-  "BLANK",
-  "BLANK",
   "BLANK",
 ];
 
@@ -78,23 +66,23 @@ export class Level {
     const cols = PATTERN[0].length;
     
     const gap = 1;
-    // We want the total pattern width to be at most 95% of screen width.
-    const maxAvailableWidth = screenWidth * 0.95 - (cols - 1) * gap;
+    // Max 92% screen width on mobile, 85% on desktop
+    const maxPatternWidthRatio = screenWidth < 768 ? 0.95 : 0.85;
+    const maxAvailableWidth = screenWidth * maxPatternWidthRatio - (cols - 1) * gap;
     const widthBasedSize = Math.floor(maxAvailableWidth / cols);
     
-    // We want the total pattern height to be at most 55% of screen height so it doesn't cover the paddle
-    const maxAvailableHeight = screenHeight * 0.55 - (rows - 1) * gap;
+    // Max 50% screen height so it leaves comfortable room for paddle
+    const maxAvailableHeight = screenHeight * 0.50 - (rows - 1) * gap;
     const heightBasedSize = Math.floor(maxAvailableHeight / rows);
     
-    // Choose the smaller of the two, with a minimum size of 4px
+    // Minimum 4px, comfortable sizing
     const brickSize = Math.max(Math.min(widthBasedSize, heightBasedSize), 4);
     
     const patternWidth = cols * brickSize + (cols - 1) * gap;
     const patternHeight = rows * brickSize + (rows - 1) * gap;
     
     const startX = (screenWidth - patternWidth) / 2;
-    // Center it somewhat vertically in the top 55% of the screen, or at least 8% from top
-    const startY = Math.max(screenHeight * 0.08, (screenHeight * 0.55 - patternHeight) / 2);
+    const startY = Math.max(screenHeight * 0.08, (screenHeight * 0.52 - patternHeight) / 2);
     
     let brickIndex = 0;
 

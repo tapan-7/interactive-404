@@ -1,7 +1,7 @@
 export class Input {
   leftPressed: boolean = false;
   rightPressed: boolean = false;
-  
+
   // Edge triggers
   spacePressed: boolean = false;
   enterPressed: boolean = false;
@@ -16,6 +16,7 @@ export class Input {
   }
 
   init() {
+    if (typeof window === "undefined") return;
     window.addEventListener("keydown", this.handleKeyDown);
     window.addEventListener("keyup", this.handleKeyUp);
     window.addEventListener("touchstart", this.handleTouchStart);
@@ -24,6 +25,7 @@ export class Input {
   }
 
   destroy() {
+    if (typeof window === "undefined") return;
     window.removeEventListener("keydown", this.handleKeyDown);
     window.removeEventListener("keyup", this.handleKeyUp);
     window.removeEventListener("touchstart", this.handleTouchStart);
@@ -31,7 +33,6 @@ export class Input {
     window.removeEventListener("touchend", this.handleTouchEnd);
   }
 
-  // Clear edge triggers after they are read
   consumeEdgeTriggers() {
     this.spacePressed = false;
     this.enterPressed = false;
@@ -39,11 +40,26 @@ export class Input {
   }
 
   private handleKeyDown(e: KeyboardEvent) {
-    if (e.code === "ArrowLeft" || e.code === "KeyA") this.leftPressed = true;
-    if (e.code === "ArrowRight" || e.code === "KeyD") this.rightPressed = true;
-    if (e.code === "Space") this.spacePressed = true;
-    if (e.code === "Enter") this.enterPressed = true;
-    if (e.code === "Escape") this.escapePressed = true;
+    if (e.code === "ArrowLeft" || e.code === "KeyA") {
+      this.leftPressed = true;
+      e.preventDefault();
+    }
+    if (e.code === "ArrowRight" || e.code === "KeyD") {
+      this.rightPressed = true;
+      e.preventDefault();
+    }
+    if (e.code === "Space") {
+      this.spacePressed = true;
+      e.preventDefault();
+    }
+    if (e.code === "Enter") {
+      this.enterPressed = true;
+      e.preventDefault();
+    }
+    if (e.code === "Escape") {
+      this.escapePressed = true;
+      e.preventDefault();
+    }
   }
 
   private handleKeyUp(e: KeyboardEvent) {
@@ -53,20 +69,18 @@ export class Input {
 
   private handleTouchStart(e: TouchEvent) {
     const touch = e.touches[0];
-    
-    // Any tap on mobile also acts as 'Space' to start/pause
     this.spacePressed = true;
-    
+
     if (touch.clientX < window.innerWidth / 2) {
       this.leftPressed = true;
+      this.rightPressed = false;
     } else {
       this.rightPressed = true;
+      this.leftPressed = false;
     }
   }
 
   private handleTouchMove(e: TouchEvent) {
-    // Optional: could track exact finger position, 
-    // but for now we just maintain the left/right pressure
     const touch = e.touches[0];
     if (touch.clientX < window.innerWidth / 2) {
       this.leftPressed = true;

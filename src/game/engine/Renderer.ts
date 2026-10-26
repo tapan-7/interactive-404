@@ -43,7 +43,6 @@ export class Renderer {
         this.ctx.beginPath();
         this.ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         this.ctx.fill();
-        this.ctx.closePath();
 
         // Visual indicator for piercing ball (white center)
         if (ball.pierceTimer > 0) {
@@ -51,7 +50,6 @@ export class Renderer {
           this.ctx.beginPath();
           this.ctx.arc(ball.x, ball.y, ball.radius * 0.4, 0, Math.PI * 2);
           this.ctx.fill();
-          this.ctx.closePath();
         }
       }
     }
@@ -70,7 +68,7 @@ export class Renderer {
   }
 
   drawProjectiles(projectiles: Projectile[]) {
-    this.ctx.fillStyle = "#1d1d1d"; // Match premium look
+    this.ctx.fillStyle = "#1d1d1d";
     for (const proj of projectiles) {
       if (proj.active) {
         this.ctx.fillRect(proj.x, proj.y, proj.width, proj.height);

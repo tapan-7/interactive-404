@@ -2,29 +2,32 @@ import { Ball } from "../entities/Ball";
 import { Paddle } from "../entities/Paddle";
 import { ModifierType } from "../entities/Modifier";
 import { GAME_CONSTANTS } from "../constants/Constants";
-import type { Engine } from "../engine/Engine";
+import { soundManager } from "../audio/SoundManager";
 
 export class ModifierEffects {
-  static apply(type: ModifierType, paddle: Paddle, balls: Ball[], engine: Engine) {
+  static apply(type: ModifierType, paddle: Paddle, balls: Ball[]) {
+    if (type !== "BLANK") {
+      soundManager.playPowerup();
+    }
+
     switch (type) {
       case "GROW_PADDLE":
-        // On mobile, limit to half screen width, otherwise max 3x normal size
         paddle.width = Math.min(
           paddle.width + 50,
-          Math.min(GAME_CONSTANTS.PADDLE_WIDTH * 3, window.innerWidth / 2)
+          Math.min(GAME_CONSTANTS.PADDLE_WIDTH * 3, window.innerWidth * 0.6)
         );
         break;
       case "SHRINK_PADDLE":
-        paddle.width = Math.max(paddle.width - 20, GAME_CONSTANTS.PADDLE_WIDTH);
+        paddle.width = Math.max(paddle.width - 25, 60);
         break;
       case "SPEED_BALL":
         balls.forEach((ball) => {
-          ball.speed = Math.min(ball.speed * 1.2, 1000);
+          ball.speed = Math.min(ball.speed * 1.2, 900);
         });
         break;
       case "SLOW_BALL":
         balls.forEach((ball) => {
-          ball.speed = Math.max(ball.speed * 0.8, 200);
+          ball.speed = Math.max(ball.speed * 0.8, 220);
         });
         break;
       case "EXTRA_BALL": {
@@ -46,14 +49,14 @@ export class ModifierEffects {
       }
       case "PIERCE_BALL":
         balls.forEach((ball) => {
-          ball.pierceTimer = 2.5;
+          ball.pierceTimer = 3.5;
         });
         break;
       case "LASER_PADDLE":
-        paddle.laserTimer = 2.5;
+        paddle.laserTimer = 4.0;
         break;
       case "BLANK":
-        // Joker - does nothing
+        // Neutral token
         break;
     }
   }
